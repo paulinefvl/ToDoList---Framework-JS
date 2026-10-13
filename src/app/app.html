@@ -9,10 +9,20 @@
   <button type="submit" [disabled]="title.trim().length < 3 || invalideDate()">Ajouter</button>
 </form>
 
-<p>{{ taskService.total() }} tâches / {{ taskService.doneTasks() }} terminées / {{ taskService.pendingTasks() }} en cours</p>
+<p>{{ taskService.total() }} tâches / {{ taskService.doneTasks() }} terminées / {{ taskService.pendingTasks() }} non terminées</p>
+
+<label for="filtre">Filtrer par :</label>
+<select id="filtre" name="filtre" [(ngModel)]="filter"> 
+  <option value="toutes">Toutes</option>
+  <option value="faites">Faites</option>
+  <option value="non terminées">Non terminées</option>
+</select>
+
+<label for="search">Rechercher :</label>
+<input id="search" name="search" [(ngModel)]="search" placeholder="Rechercher une tâche" /> 
 
 <ul>
-@for (task of taskService.tasks(); track task.id) {
+@for (task of filterTasks(); track task.id) {
   <li>
   @if (editId === task.id) {
     <input name="editTitle" [(ngModel)]="editTitle" />

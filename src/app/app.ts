@@ -20,6 +20,8 @@ export class App {
   editTitle = '';
   editDescription = '';
   editDueDate = '';
+  filter = 'toutes';
+  search = '';
 
   addTask() {
     if (this.title.trim().length < 3) {
@@ -73,5 +75,16 @@ export class App {
   invalideEditDate(): boolean {
   return this.editDueDate !== '' && this.editDueDate < this.today();
   }
+
+  filterTasks(): Task[] {
+  const q = this.search.trim().toLowerCase();
+
+  return this.taskService.tasks()
+    .filter(t => this.filter === 'toutes' || (this.filter === 'faites' && t.done) || (this.filter === 'non terminées' && !t.done))
+    .filter(t => t.title.toLowerCase().includes(q))
+    .sort((a, b) =>
+      (a.dueDate ?? '9999-12-31').localeCompare(b.dueDate ?? '9999-12-31') || a.title.localeCompare(b.title));
+}
+
 
 }
