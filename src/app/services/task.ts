@@ -1,4 +1,4 @@
-import { effect, Injectable, signal } from '@angular/core';
+import { effect, Injectable, signal, computed } from '@angular/core';
 import { Task } from '../models/task';
 
 type editionTache = Partial<Pick<Task, 'title' | 'description' | 'dueDate' | 'done'>>;
@@ -9,6 +9,9 @@ export class TaskService {
 
     private readonly state = signal<Task[]>(this.load());
     readonly tasks = this.state.asReadonly();
+    readonly total = computed(() => this.state().length);
+    readonly doneTasks = computed(() => this.state().filter(t => t.done).length);
+    readonly pendingTasks = computed(() => this.state().filter(t => !t.done).length);
 
     constructor() {
         effect(() => {

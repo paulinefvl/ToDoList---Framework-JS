@@ -6,6 +6,8 @@
   <button type="submit" [disabled]="title.trim().length < 3">Ajouter</button>
 </form>
 
+<p>{{ taskService.total() }} tâches / {{ taskService.doneTasks() }} terminées / {{ taskService.pendingTasks() }} en cours</p>
+
 <ul>
 @for (task of taskService.tasks(); track task.id) {
   <li>
