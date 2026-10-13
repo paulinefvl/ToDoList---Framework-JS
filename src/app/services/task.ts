@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { effect, Injectable, signal } from '@angular/core';
 import { Task } from '../models/task';
 
 type editionTache = Partial<Pick<Task, 'title' | 'description' | 'dueDate' | 'done'>>;
@@ -7,8 +7,24 @@ type editionTache = Partial<Pick<Task, 'title' | 'description' | 'dueDate' | 'do
 
 export class TaskService {
 
-    private readonly state = signal<Task[]>([]);
+    private readonly state = signal<Task[]>(this.load());
     readonly tasks = this.state.asReadonly();
+
+    constructor() {
+        effect(() => {
+            const tasks = this.state();
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        });
+    }
+
+    private load() : Task[] {
+        try {
+            const value = JSON.parse(localStorage.getItem('tasks') ?? '[]');
+            return Array.isArray(value) ? value : [];
+        } catch {
+            return [];
+        }
+    }
     
     add(data: { title: string; dueDate?: string; description?: string}) {
         const now = new Date().toISOString();
