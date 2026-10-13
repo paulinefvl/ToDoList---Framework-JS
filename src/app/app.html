@@ -7,16 +7,18 @@
 </form>
 
 <ul>
-  @for (task of taskService.tasks(); track task.id) { 
-    <li>
-      <strong>{{ task.title }}</strong>
-      @if (task.description) {
+@for (task of taskService.tasks(); track task.id) {
+  <li>
+    <input type="checkbox" [checked]="task.done" (change)="taskService.toggle(task.id)" />
+    <strong>{{ task.title }}</strong>
+    @if (task.description) {
       <small>{{ task.description }}</small>
     }
-    </li>
-    } @empty { 
-    <li>Liste de tâches vide</li> 
-    }
+    <button (click)="supprTask(task.id)">Supprimer</button>
+  </li>
+} @empty {
+  <li>Liste de tâches vide</li>
+}
 </ul>
 
 <router-outlet />

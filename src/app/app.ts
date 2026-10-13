@@ -28,4 +28,10 @@ export class App {
 
   }
 
+  supprTask(id: string) {
+    if (confirm('Supprimer cette tâche ?')) {
+      this.taskService.remove(id);
+    }
+  }
+
 }
