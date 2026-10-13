@@ -1,0 +1,7 @@
+<h2>Statistiques</h2>
+<ul>
+  <li>Total : {{ taskService.total() }}</li>
+  <li>Faites : {{ taskService.doneTasks() }}</li>
+  <li>À faire : {{ taskService.pendingTasks() }}</li>
+  <li>Terminées : {{ taskService.percentDone() }} %</li>
+</ul>

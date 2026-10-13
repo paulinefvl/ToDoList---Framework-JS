@@ -12,6 +12,8 @@ export class TaskService {
     readonly total = computed(() => this.state().length);
     readonly doneTasks = computed(() => this.state().filter(t => t.done).length);
     readonly pendingTasks = computed(() => this.state().filter(t => !t.done).length);
+    readonly percentDone = computed(() =>
+    this.total() === 0 ? 0 : Math.round(100 * this.doneTasks() / this.total()));
 
     constructor() {
         effect(() => {
