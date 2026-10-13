@@ -2,8 +2,11 @@
 <form (ngSubmit)="addTask()">
   <input  name="title" [(ngModel)]="title" placeholder="Titre de la tâche" />
   <input  name="description" [(ngModel)]="description" placeholder="Description de la tâche" />
-  <input  name="dueDate" type="date" [(ngModel)]="dueDate" />
-  <button type="submit" [disabled]="title.trim().length < 3">Ajouter</button>
+  <input  name="dueDate" type="date" [(ngModel)]="dueDate" [min]="today()" />
+  @if (invalideDate()) {
+    <p class="erreur"> L'échéance ne peut pas être dans le passé. </p>
+  }
+  <button type="submit" [disabled]="title.trim().length < 3 || invalideDate()">Ajouter</button>
 </form>
 
 <p>{{ taskService.total() }} tâches / {{ taskService.doneTasks() }} terminées / {{ taskService.pendingTasks() }} en cours</p>
@@ -13,10 +16,13 @@
   <li>
     <input type="checkbox" [checked]="task.done" (change)="taskService.toggle(task.id)" />
     <strong>{{ task.title }}</strong>
+    @if (task.dueDate) {
+      <small> A faire au plus tard pour : ({{ task.dueDate }})</small>
+    }
     @if (task.description) {
       <small>{{ task.description }}</small>
     }
-    <button (click)="supprTask(task.id)">Supprimer</button>
+    <button (click)="supprTask(task.id)">Supprimer la tâche </button>
   </li>
 } @empty {
   <li>Liste de tâches vide</li>
