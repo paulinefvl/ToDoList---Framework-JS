@@ -14,6 +14,16 @@
 <ul>
 @for (task of taskService.tasks(); track task.id) {
   <li>
+  @if (editId === task.id) {
+    <input name="editTitle" [(ngModel)]="editTitle" />
+    <input name="editDescription" [(ngModel)]="editDescription" />
+    <input name="editDueDate" type="date" [(ngModel)]="editDueDate" [min]="today()" />
+    @if (invalideEditDate()) {
+      <p class="erreur">L'échéance ne peut pas être dans le passé.</p>
+    }
+    <button (click)="updateTask()" [disabled]="editTitle.trim().length < 3 || invalideEditDate()">Mettre à jour</button>
+    <button (click)="cancelEdit()">Annuler</button>
+  } @else {
     <input type="checkbox" [checked]="task.done" (change)="taskService.toggle(task.id)" />
     <strong>{{ task.title }}</strong>
     @if (task.dueDate) {
@@ -22,7 +32,9 @@
     @if (task.description) {
       <small>{{ task.description }}</small>
     }
+    <button (click)="editTask(task)">Modifier la tâche</button>
     <button (click)="supprTask(task.id)">Supprimer la tâche </button>
+  }
   </li>
 } @empty {
   <li>Liste de tâches vide</li>

@@ -2,6 +2,7 @@ import { Component, inject} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TaskService } from './services/task';
 import { FormsModule } from '@angular/forms';
+import { Task } from './models/task';
 
 @Component({
   imports: [RouterOutlet, FormsModule],
@@ -15,6 +16,10 @@ export class App {
   title = '';
   description = '';
   dueDate = '';
+  editId = '';
+  editTitle = '';
+  editDescription = '';
+  editDueDate = '';
 
   addTask() {
     if (this.title.trim().length < 3) {
@@ -45,6 +50,28 @@ export class App {
     return this.dueDate !== '' && this.dueDate < this.today();
   }
 
-  
+  editTask(task : Task) {
+    this.editId = task.id;
+    this.editTitle = task.title;
+    this.editDescription = task.description ?? '';
+    this.editDueDate = task.dueDate ?? '';
+  }
+
+  updateTask() {
+    this.taskService.update(this.editId, {
+      title : this.editTitle.trim(),
+      description : this.editDescription.trim(),
+      dueDate : this.editDueDate || undefined,
+    });
+    this.editId = '';
+  }
+
+  cancelEdit() {
+    this.editId = '';
+  }
+
+  invalideEditDate(): boolean {
+  return this.editDueDate !== '' && this.editDueDate < this.today();
+  }
 
 }
