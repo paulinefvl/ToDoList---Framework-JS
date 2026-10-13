@@ -1,51 +1,68 @@
-<form (ngSubmit)="addTask()">
-  <input  name="title" [(ngModel)]="title" placeholder="Titre de la tâche" />
-  <input  name="description" [(ngModel)]="description" placeholder="Description de la tâche" />
-  <input  name="dueDate" type="date" [(ngModel)]="dueDate" [min]="today()" />
+<form (ngSubmit)="addTask()" class="form-ajout">
+  <label for="title">Titre</label>
+  <input id="title" name="title" [(ngModel)]="title" placeholder="Titre de la tâche" />
+
+  <label for="description">Description</label>
+  <input id="description" name="description" [(ngModel)]="description" placeholder="Description (facultatif)" />
+
+  <label for="dueDate">Échéance</label>
+  <input id="dueDate" name="dueDate" type="date" [(ngModel)]="dueDate" [min]="today()" />
+
   @if (invalideDate()) {
-    <p class="erreur"> L'échéance ne peut pas être dans le passé. </p>
+    <p class="erreur">L'échéance ne peut pas être dans le passé.</p>
   }
   <button type="submit" [disabled]="title.trim().length < 3 || invalideDate()">Ajouter</button>
 </form>
 
-<p>{{ taskService.total() }} tâches / {{ taskService.doneTasks() }} terminées / {{ taskService.pendingTasks() }} non terminées</p>
+<p class="compteur">{{ taskService.total() }} tâches / {{ taskService.doneTasks() }} terminées / {{ taskService.pendingTasks() }} non terminées</p>
 
-<label for="filtre">Filtrer par :</label>
-<select id="filtre" name="filtre" [(ngModel)]="filter"> 
-  <option value="toutes">Toutes</option>
-  <option value="faites">Faites</option>
-  <option value="non terminées">Non terminées</option>
-</select>
+<div class="filtres">
+  <label for="filtre">Filtrer par :</label>
+  <select id="filtre" name="filtre" [(ngModel)]="filter">
+    <option value="toutes">Toutes</option>
+    <option value="faites">Faites</option>
+    <option value="non terminées">Non terminées</option>
+  </select>
 
-<label for="search">Rechercher :</label>
-<input id="search" name="search" [(ngModel)]="search" placeholder="Rechercher une tâche" /> 
+  <label for="search">Rechercher :</label>
+  <input id="search" name="search" [(ngModel)]="search" placeholder="Rechercher une tâche" />
+</div>
 
-<ul>
+<ul class="liste">
 @for (task of filterTasks(); track task.id) {
-  <li>
+  <li [class.faite]="task.done">
   @if (editId === task.id) {
-    <input name="editTitle" [(ngModel)]="editTitle" />
-    <input name="editDescription" [(ngModel)]="editDescription" />
-    <input name="editDueDate" type="date" [(ngModel)]="editDueDate" [min]="today()" />
+    <input name="editTitle" aria-label="Modifier le titre" [(ngModel)]="editTitle" />
+    <input name="editDescription" aria-label="Modifier la description" [(ngModel)]="editDescription" />
+    <input name="editDueDate" aria-label="Modifier l'échéance" type="date" [(ngModel)]="editDueDate" [min]="today()" />
     @if (invalideEditDate()) {
       <p class="erreur">L'échéance ne peut pas être dans le passé.</p>
     }
-    <button (click)="updateTask()" [disabled]="editTitle.trim().length < 3 || invalideEditDate()">Mettre à jour</button>
-    <button (click)="cancelEdit()">Annuler</button>
+    <div class="actions">
+      <button (click)="updateTask()" [disabled]="editTitle.trim().length < 3 || invalideEditDate()">Enregistrer</button>
+      <button (click)="cancelEdit()">Annuler</button>
+    </div>
   } @else {
-    <input type="checkbox" [checked]="task.done" (change)="taskService.toggle(task.id)" />
-    <strong>{{ task.title }}</strong>
-    @if (task.dueDate) {
-      <small> A faire au plus tard pour : ({{ task.dueDate }})</small>
-    }
-    @if (task.description) {
-      <small>{{ task.description }}</small>
-    }
-    <button (click)="editTask(task)">Modifier la tâche</button>
-    <button (click)="supprTask(task.id)">Supprimer la tâche </button>
+    <div class="tache">
+      <input type="checkbox" [attr.aria-label]="'Marquer ' + task.title + ' comme faite'"
+             [checked]="task.done" (change)="taskService.toggle(task.id)" />
+      <div>
+        <strong>{{ task.title }}</strong>
+        @if (task.dueDate) {
+          <small>Échéance : {{ task.dueDate }}</small>
+        }
+        @if (task.description) {
+          <small>{{ task.description }}</small>
+        }
+      </div>
+    </div>
+    <div class="actions">
+      <button (click)="editTask(task)">Modifier</button>
+      <button (click)="supprTask(task.id)" class="danger">Supprimer</button>
+    </div>
   }
   </li>
 } @empty {
-  <li>Liste de tâches vide</li>
+  <li>Aucune tâche à afficher</li>
 }
 </ul>

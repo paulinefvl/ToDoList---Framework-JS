@@ -1,0 +1,70 @@
+.form-ajout {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 400px;
+  margin-bottom: 20px;
+}
+
+.form-ajout button {
+  align-self: flex-start;
+}
+
+.erreur {
+  color: #c0392b;
+  margin: 0;
+}
+
+.compteur {
+  font-weight: bold;
+}
+
+.filtres {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.liste {
+  list-style: none;
+  padding: 0;
+}
+
+.liste li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.tache {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.tache small {
+  display: block;
+  color: #666;
+}
+
+.faite strong {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
+.danger {
+  color: #c0392b;
+}
